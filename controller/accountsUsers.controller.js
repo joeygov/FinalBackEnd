@@ -1,21 +1,5 @@
 const AccountsUsers = require('../models/model.accountsUsers.js');
 
-// exports.create('/accountsUsers', async (req, res) => {
-//     let accountsUsersToCreate = new AccountsUsers(
-//         {
-//             lastname: req.body.lastname,
-//             firstname: req.body.firstname,
-//             address: req.body.address,
-//             age: req.body.age,
-//             email: req.body.email,
-//             contact_no: req.body.contact_no,
-//             username: req.body.username,
-//             password: req.body.password
-
-//         }
-//     );
-
-
 module.exports.create = (req, res) => {
     const accountsUsersToCreate = new AccountsUsers(
         {
@@ -51,44 +35,6 @@ module.exports.AllUsers = (req, res) => {
     })
 }
 
-// module.exports.createUser = (req, res, name) => {
-//     query.findOne({name})
-//             .then(quer => {
-//                 if (!quer) {
-//                     return res.status(404).send({
-//                         message: "Can't find id: " + name
-//                     });
-//                 }
-//                 res.send(quer);
-//             }).catch(err => {
-//                 if (err.kind === 'ObjectId') {
-//                     return res.status(404).send({
-//                         message: "Can't find id:" + name
-//                     });
-//                 }
-//                 return res.status(500).send({
-//                     message: "Error to retrieve " + name
-//                 });
-//             });
-//     };
-// accountsUsersToCreate.save((err, accountsUsers) => {
-//     if (err) {
-//         res.send(err);
-//     }
-//     res.json(accountsUsers);
-// });
-
-// });
-
-// app.getAll('/accountsUserList', (req, res) => {
-//     AccountsUsers.find({}, (err, AccountsUsers) => {
-//         if (err) {
-//             res.send(err);
-//         }
-//         res.json({ AccountsUsers: AccountsUsers });
-//     });
-
-// });
 
 exports.getById = (req, res) => {
     AccountsUsers.findById(req.params.accountsUsersID, (err, user) => {

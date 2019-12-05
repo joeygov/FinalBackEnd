@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const ItemSchema = new Schema(
     {
-        URL: { type: Buffer, require: true },
+        URL: { type: String, require: true },
         itemName: { type: String, require: true },
         //companyID: { type: String, require: true },
         category: { type: String, require: true },

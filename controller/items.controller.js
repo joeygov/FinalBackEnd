@@ -1,5 +1,7 @@
-const Items = require('../models/model.item.js');
+const express = require('express');
 
+const Items = require('../models/model.item.js');
+const app = express();
 
 //adding items to db
 module.exports.create = (req, res) => {
@@ -26,6 +28,18 @@ module.exports.create = (req, res) => {
         res.json(items);
     });
 };
+
+app.use((err, req, res, next) => {
+    if (err.code === "INCORRECT_FILETYPE") {
+      res.status(422).json({ error: 'Only images are allowed' });
+      return;
+    }
+    if (err.code === "LIMIT_FILE_SIZE") {
+      res.status(422).json({ error: 'Allow file size is 500KB' });
+      return;
+    }
+  });
+  
 
 //getting all Items
 // exports.getAll('/itemList', (req, res) => {

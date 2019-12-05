@@ -35,22 +35,6 @@ mongoose.connect(dbConfig, { useNewUrlParser: true, useUnifiedTopology: true }
 });
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-
-
-
-// // Set up default mongoose connection
-// let db_url = 'mongodb://127.0.0.1/abangDB';
-// mongoose.connect(db_url, { useNewUrlParser: true });
-// // Get the default connection
-// var db = mongoose.connection;
-// // Bind connection to error event (to get notification of connection errors)
-// db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
-// //const db = mongoose.connection;
-// db.on('error', (error) => console.error(error));
-// db.once('open', () => console.log('connected to database'));
-
-
 // ------------------------------------------------------------
 
 // Import Models
@@ -58,7 +42,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // const AccountsUsers = require('./models/model.accountsUsers.js');
 // const AccountsProvider = require('./models/model.accountsProvider.js');
 // const Reservation = require('./models/model.reservation.js');
- const Items = require('./controller/items.controller.js');
+// const Items = require('./controller/items.controller.js');
 //import controller
 const createUser = require('./controller/accountsUsers.controller.js');
 //const test = require('./models/model.test.js');
@@ -90,9 +74,39 @@ app.post('/accountsUsers', function (req, res) {
 });
 app.get("/login", createUser.AllUsers);
 
-app.post('/upload', function (req, res) {
-  console.log(req.body)
-  createUser.create(req, res);
+
+
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+  if (!allowedTypes.includes(file.mimetype)) {
+    const error = new Error("Incorrect file");
+    error.code = "INCORRECT_FILETYPE";
+    return cb(error, false)
+  }
+  cb(null, true);
+}
+
+const upload = multer({
+  dest: './uploads',
+  fileFilter,
+  limits: {
+    fileSize: 5000000
+  }
+});
+
+app.post('/upload', upload.single('file'), (req, res) => {
+  res.json({ file: req.file });
+});
+
+app.use((err, req, res, next) => {
+  if (err.code === "INCORRECT_FILETYPE") {
+    res.status(422).json({ error: 'Only images are allowed' });
+    return;
+  }
+  if (err.code === "LIMIT_FILE_SIZE") {
+    res.status(422).json({ error: 'Allow file size is 500KB' });
+    return;
+  }
 });
 
 

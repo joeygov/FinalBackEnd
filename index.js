@@ -38,41 +38,21 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // ------------------------------------------------------------
 
 // Import Models
-
-// const AccountsUsers = require('./models/model.accountsUsers.js');
-// const AccountsProvider = require('./models/model.accountsProvider.js');
-// const Reservation = require('./models/model.reservation.js');
-// const Items = require('./controller/items.controller.js');
-//import controller
 const createUser = require('./controller/accountsUsers.controller.js');
-//const test = require('./models/model.test.js');
+const addItem = require('./controller/items.controller.js');
 
-// app.get('/pusher',(req,res)=>{
-//    var pusher = new Pusher({
-//     app_id : '906629',
-//     key : '5dd0d9748bc2e0e4bb9a',
-//     secret : 'a0cd9c898742534c16f3',
-//     cluster : 'ap1',
-//     encrypted : true
-//    });
-//    var data = {
-//      'data': {
-//        req.query
-//      }
-//    }
-//   pusher.trigger('my-channel', 'my-event', {
-//      'data':{
-//        data
-//      }
-
-//   })
-// })
 
 app.post('/accountsUsers', function (req, res) {
   console.log(req.body)
   createUser.create(req, res);
 });
+
 app.get("/login", createUser.AllUsers);
+
+app.post('/addItem', function (req, res){
+  console.log(req.body);
+  addItem.create(req, res);
+})
 
 
 
@@ -86,15 +66,20 @@ const fileFilter = (req, file, cb) => {
   cb(null, true);
 }
 
-const upload = multer({
-  dest: './uploads',
-  fileFilter,
-  limits: {
-    fileSize: 5000000
-  }
-});
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now()+'.jpg')
+  },
+  fileFilter
+})
+ 
+var upload = multer({ storage: storage })
 
 app.post('/upload', upload.single('file'), (req, res) => {
+  console.log(req)
   res.json({ file: req.file });
 });
 

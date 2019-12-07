@@ -7,17 +7,13 @@ const app = express();
 module.exports.create = (req, res) => {
     const ItemToCreate = new Items(
         {   
-            URL: req.body.URL,
-            //itemID: req.body.itemID,
-            //companyID: req.body.companyID,
-            category: req.body.category,
+            imageSRC: req.body.imageSRC,
+            name: req.body.name,
             brand: req.body.brand,
-            model: req.body.model,
             sitingcapacity: req.body.sitingcapacity,
-            //color: req.body.color,
             location: req.body.location,
             rate: req.body.rate,
-            status: req.body.status,
+           // status: req.body.status,
 
         }
     );
